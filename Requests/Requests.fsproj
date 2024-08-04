@@ -39,9 +39,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FSharpTools\FSharpTools.fsproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="FSharpTools" Version="10.0.4" />
   </ItemGroup>
 </Project>
