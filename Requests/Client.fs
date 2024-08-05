@@ -1,4 +1,4 @@
-﻿namespace FSharpTools.Requests
+﻿namespace FSharpTools.HttpRequests
 open System
 open System.Net.Http
 open FSharpTools.Functional

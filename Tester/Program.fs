@@ -1,3 +1,3 @@
-﻿open FSharpTools.Requests.Client
+﻿open FSharpTools.HttpRequests.Client
 
 let client = getClient ()
