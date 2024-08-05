@@ -10,7 +10,7 @@ let call url =
     |> AsyncResult.toResult
 
 async {
-    let! affe = call "http://pluto9:9090"
+    let! affe = call "http://nichtda:9090"
     printfn "%O" affe
 } |> Async.RunSynchronously
 
@@ -30,10 +30,6 @@ async {
 } |> Async.RunSynchronously
 
 // TODO HttpRequestException with status code and text
-// TODO certain status codes are not errors // controllable
-// TODO NameResolutionError
-// TODO Connection refused error
-// TODO Unknown exceptions
 // TODO JsonSerializationError (in out)
                 // InvalidOperationException ioe => new RequestInvalidOperationException(ioe),
                 // TaskCanceledException => new TimeoutException(),
