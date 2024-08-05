@@ -8,6 +8,8 @@ open FSharpTools.AsyncResult
 open Client
 
 module Request = 
+    open System.Net.Http
+    open System.Net
     let private mapException (exp: Exception): RequestError =
         match exp with
         | :? HttpRequestException as hre when hre.HttpRequestError = HttpRequestError.NameResolutionError
@@ -20,6 +22,11 @@ module Request =
         | _ -> { Message = exp.Message; Type = Unknown exp }
     
     let private call settings onlyHeaders = 
+
+        let httpToError (msg: HttpResponseMessage) =
+            match msg.StatusCode with
+            | HttpStatusCode.OK -> Ok msg
+            | _ -> Error { Message = msg.ReasonPhrase; Type = Http (LanguagePrimitives.EnumToValue msg.StatusCode) }
 
         let addHeaders (msg: HttpRequestMessage) = 
             let addHeader header = 
@@ -46,9 +53,9 @@ module Request =
                 | None -> (getClient ()).SendAsync (msg, whatHeaders)  
                     
             catch sendAsync
-            
 
         sendAsync ()
         |> AsyncResult.mapError mapException
+        |> AsyncResult.bindToError httpToError
             
-    let callTest = call
+    let callTest = call 
