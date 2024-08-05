@@ -14,7 +14,6 @@ module Client =
         maxConnectionsVal <- maxConnections
         timeoutVal <- timeout
 
-
     let getClient = 
         let getClient () =
             new HttpClient(new HttpClientHandler(

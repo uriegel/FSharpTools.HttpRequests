@@ -21,3 +21,15 @@ type Settings = {
     AddContent: (unit->HttpContent) option
     Timeout: TimeSpan option
 }
+
+module Settings =
+    let getDefaultSettings () = 
+        {
+            Method = HttpMethod.Get
+            BaseUrl = None
+            Url = "" 
+            Version = { Major = 3; Minor = 0}
+            Headers = None
+            AddContent = None
+            Timeout = None
+        }

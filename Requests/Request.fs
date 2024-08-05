@@ -2,11 +2,10 @@ namespace FSharpTools.HttpRequests
 open System.Net.Http
 open System.Threading
 open FSharpTools.Functional
+open FSharpTools.AsyncResult
 open Client
 
 module Request = 
-    
-
     let private call settings onlyHeaders = 
 
         let addHeaders (msg: HttpRequestMessage) = 
@@ -24,10 +23,17 @@ module Request =
                                 Version = new System.Version(settings.Version.Major, settings.Version.Minor))
             |> sideEffect addHeaders
 
-        let whatHeaders = if onlyHeaders then HttpCompletionOption.ResponseHeadersRead else HttpCompletionOption.ResponseContentRead
-        let response = 
-            match settings.Timeout with
-            | Some t -> (getClient ()).SendAsync (msg, whatHeaders, (new CancellationTokenSource(t)).Token)  
-            | None -> (getClient ()).SendAsync (msg, whatHeaders)  
-        // TODO SendAsync function returnning AsyncResult<response, HttpException
+        let sendAsync () = 
+            let whatHeaders = if onlyHeaders then HttpCompletionOption.ResponseHeadersRead else HttpCompletionOption.ResponseContentRead
+            let sendAsync () = 
+                let client = getClient ()
+
+                match settings.Timeout with
+                | Some t -> (getClient ()).SendAsync (msg, whatHeaders, (new CancellationTokenSource(t)).Token)  
+                | None -> (getClient ()).SendAsync (msg, whatHeaders)  
+                    
+            catch sendAsync
+
+        sendAsync ()
             
+    let callTest = call
