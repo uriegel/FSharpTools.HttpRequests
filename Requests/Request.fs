@@ -15,7 +15,7 @@ module Request =
         | :? HttpRequestException as hre 
             -> match hre.InnerException with
                 | :? SocketException as se when se.SocketErrorCode = SocketError.ConnectionRefused 
-                    -> { Message = se.Message; Type = ConnectionRefused }
+                    -> { Message = hre.Message; Type = ConnectionRefused }
                 | _ -> { Message = hre.Message; Type = Unknown exp }
         | _ -> { Message = exp.Message; Type = Unknown exp }
     

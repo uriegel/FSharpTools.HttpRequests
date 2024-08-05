@@ -10,23 +10,23 @@ let call url =
     |> AsyncResult.toResult
 
 async {
-    let! affe = call "http://nichtda:9090"
-    printfn "%O" affe
+    let! res = call "http://nichtda:9090"
+    printfn "%A" res
 } |> Async.RunSynchronously
 
 async {
-    let! affe = call "http://pluto:9090"
-    printfn "%O" affe
+    let! res = call "http://pluto:9090"
+    printfn "%A" res
 } |> Async.RunSynchronously
 
 async {
-    let! affe = call "http://pluto:8080/notavaliable"
-    printfn "%O" affe
+    let! res = call "http://pluto:8080/notavaliable"
+    printfn "%A" res
 } |> Async.RunSynchronously
 
 async {
-    let! affe = call "http://pluto:8080/getfiles/home/uwe"
-    printfn "%O" affe
+    let! res = call "http://pluto:8080/getfiles/home/uwe"
+    printfn "%A" res
 } |> Async.RunSynchronously
 
 // TODO HttpRequestException with status code and text
