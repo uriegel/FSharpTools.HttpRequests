@@ -2,11 +2,12 @@
 open FSharpTools.HttpRequests
 open System
 open FSharpTools
+open FSharpTools.HttpRequests.Settings
 
 Client.initWithTimeout 16 <| TimeSpan.FromSeconds 5
 
 let call url = 
-    callTest { Settings.getDefaultSettings () with Url = url } false   
+    request { Settings.getDefaultSettings () with Url = url } 
     |> AsyncResult.toResult
 
 async {
@@ -29,6 +30,18 @@ async {
     printfn "%A" res
 } |> Async.RunSynchronously
 
+type LoginInput = {
+    AndroidId: string
+}
+
+let jsonPost<'a> (url: string) (a: 'a) = 
+    getDefaultSettings ()
+    |> post
+    |> Json.input<'a> a
+    |> Settings.url url
+    |> request
+
+let ares = jsonPost "http://localhost:8080/superfit/login" { AndroidId = "Uwe Riegel" }
 // TODO HttpRequestException with status code and text
 // TODO JsonSerializationError (in out)
                 // InvalidOperationException ioe => new RequestInvalidOperationException(ioe),
@@ -38,3 +51,7 @@ async {
                 // HttpRequestException hre when hre.InnerException is SocketException se
                 //     => new RequestSocketException(se),
                 // Exception e => new HttpException(e.Message, e)
+async {
+    let! res = ares |> AsyncResult.toResult
+    printfn "%A" res
+} |> Async.RunSynchronously

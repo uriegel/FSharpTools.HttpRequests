@@ -33,3 +33,8 @@ module Settings =
             AddContent = None
             Timeout = None
         }
+
+    let url url settings = { settings with Url = url  }
+    let post settings = { settings with Method = HttpMethod.Post  }
+    let put settings = { settings with Method = HttpMethod.Put  }
+    let delete settings = { settings with Method = HttpMethod.Delete  }
