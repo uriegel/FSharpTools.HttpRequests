@@ -34,14 +34,14 @@ type LoginInput = {
     AndroidId: string
 }
 
-let jsonPost<'a> (url: string) (a: 'a) = 
+let jsonPost<'a> (a: 'a) (url: string)  = 
     getDefaultSettings ()
     |> post
     |> Json.input<'a> a
     |> Settings.url url
     |> request
 
-let ares = jsonPost "http://localhost:8080/superfit/login" { AndroidId = "Uwe Riegel" }
+let ares = jsonPost { AndroidId = "Uwe Riegel" } "http://localhost:8080/superfit/login" 
 // TODO HttpRequestException with status code and text
 // TODO JsonSerializationError (in out)
                 // InvalidOperationException ioe => new RequestInvalidOperationException(ioe),
@@ -55,3 +55,12 @@ async {
     let! res = ares |> AsyncResult.toResult
     printfn "%A" res
 } |> Async.RunSynchronously
+
+let jsonRequest<'a> ((a: 'a), (url: string))  = 
+    getDefaultSettings ()
+    |> post
+    |> Json.input<'a> a
+    |> Settings.url url
+    |> request
+
+let ares2 (a, url) = jsonRequest<'a> >> Response.asJson

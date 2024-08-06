@@ -7,6 +7,7 @@ type ErrorType =
     | ConnectionRefused
     | Socket
     | Timeout
+    | Deserialization
     | Http of int
 
 type RequestError = {
