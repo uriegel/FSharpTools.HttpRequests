@@ -34,6 +34,18 @@ type LoginInput = {
     AndroidId: string
 }
 
+type LoginInputNotExisting = {
+    AndroidIdNotExisting: string
+}
+
+type LoginOutput = {
+    Registered: bool
+}
+
+type LoginOutputNotExisting = {
+    RegisteredNotExisting: bool
+}
+
 let jsonPost<'a> (a: 'a) (url: string)  = 
     getDefaultSettings ()
     |> post
@@ -56,11 +68,37 @@ async {
     printfn "%A" res
 } |> Async.RunSynchronously
 
-let jsonRequest<'a> ((a: 'a), (url: string))  = 
+let jsonRequest<'a, 'b> url a =
     getDefaultSettings ()
     |> post
     |> Json.input<'a> a
     |> Settings.url url
     |> request
+    >>= Response.asJson<'b>
 
-let ares2 (a, url) = jsonRequest<'a> >> Response.asJson
+async {
+    let! res = 
+        jsonRequest "http://localhost:8080/superfit/login" { AndroidId = "Uwe Riegel" }
+        |> AsyncResult.toResult
+    match res with
+    | Ok ok -> printfn "%b" ok.Registered
+    | Error err -> printfn "%A" err
+} |> Async.RunSynchronously
+
+async {
+    let! res = 
+        jsonRequest "http://localhost:8080/superfit/login" { AndroidIdNotExisting = "Uwe Riegel" }
+        |> AsyncResult.toResult
+    match res with
+    | Ok ok -> printfn "%b" ok.Registered
+    | Error err -> printfn "%A" err
+} |> Async.RunSynchronously
+
+async {
+    let! res = 
+        jsonRequest "http://localhost:8080/superfit/login" { AndroidId = "Uwe Riegel" }
+        |> AsyncResult.toResult
+    match res with
+    | Ok ok -> printfn "%b" ok.RegisteredNotExisting
+    | Error err -> printfn "%A" err
+} |> Async.RunSynchronously
